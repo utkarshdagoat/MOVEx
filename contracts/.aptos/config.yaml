@@ -1,8 +1,0 @@
----
-profiles:
-  default:
-    network: Custom
-    private_key: "0x47310bdbb9b1324a251af41a0188f2fd6e462e08125f5299f6c809f9ae351029"
-    public_key: "0xfb54927655b78daee7030a4637990e9044604d8c749177f54d2bcf5a57edfa11"
-    account: d7275d3d27c3304cdb667f82bf18f4c595469271630ff4b19f7a411a2ba6b7c0
-    rest_url: "https://aptos.devnet.m1.movementlabs.xyz/"
