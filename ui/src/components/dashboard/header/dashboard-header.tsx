@@ -15,14 +15,6 @@ export default function DashboardHeader() {
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  const connectWalletHandle = async () => {
-
-  };
-
-  useEffect(()=>{
-  },[walletAddress])
-
-
 
   return (
     <div className="flex flex-row justify-between">

@@ -1,28 +1,4 @@
-/// With the NFT DAO, token holders can
-/// - be able to create a DAO and connect it to their existing NFT project
-/// - be able to create proposals that can be voted on-chain
-/// - be able to have proposal results concluded and executed on-chain
-///
-/// An example e2e flow. For more details check the `An Example E2E Flow` section
-/// There are multiple roles: DAO platform operator, DAO creator, proposer and voter.
-/// 1. Platform operator deploys this package to create a DAO platform. They can deploy the contract as immutable to
-/// enable trustlessness.
-/// 2. DAO creator calls `create_dao` to create their DAO. This will create the DAO in a separate resource account.
-/// 3. A proposer can specify the DAO they want to create a proposal and create the proposal through `create_proposal`
-///    A proposal can execute a list of functions of 3 types. eg: transferring multiple NFTs can be a proposal of multiple offer_nft function:
-///         a: no-op, no execution happens on chain. Only the proposal and its results are recorded on-chain for DAO
-///            admin to take actions off-chain
-///         b: Transfer APT funds: from DAO account to the specified destination account.
-///         c: Offer NFTs to the specified destination account.
-/// 4. A voter can vote for a proposal of a DAO through `vote`.
-/// 5. Anyone can call the `resolve` to resolve a proposal. A proposal voting duration has to expire and the proposal
-/// should have more votes than the minimal required threshold.
-///
-/// The DAO plaform also support admin operations. For more details, check readme `Special DAO Admin Functions` section
-///
-/// An example of DAO removal from existing DAO plaform.
-/// 1. The DAO creator can call `reclaim_signer_capability` to remove their DAO from the platform and get back her
-/// resource account's signercapability
+
 
 module governance::dao {
     use aptos_framework::account::{SignerCapability, create_signer_with_capability};
@@ -183,8 +159,7 @@ module governance::dao {
     }
 
     #[view]
-    /// Unpack the DAO fields
-    public entry fun unpack_dao(): ( u64, u64, address,vector<address>,vector<address>) acquires DAO {
+    public fun unpack_dao(): ( u64, u64, address,vector<address>,vector<address>) acquires DAO {
         let dao = borrow_global<DAO>(@governance);
         (
             dao.voting_duration,
@@ -448,13 +423,6 @@ module governance::dao {
             proposal.resolution,
         )
     }
-
-    /////////////////////////// Private functions //////////////////////////////////
-    /// Transfer coin from the DAO account to the destination account
-    fun transfer_fund(res_acct: &signer, dst: address, amount: u64) {
-        coin::transfer<AptosCoin>(res_acct, dst, amount);
-    }
-
 
 
     /// Resolve an proposal

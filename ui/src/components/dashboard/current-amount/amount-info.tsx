@@ -130,12 +130,12 @@ export default function AmountInfo() {
     {
       title: "mUSDC Balance",
       type: "component",
-      data: <AmountDisplay amount={12500.45} currency="mUSDC" />,
+      data: <AmountDisplay amount={0} currency="mUSDC" />,
     },
     {
       title: "Rewards",
       type: "component",
-      data: <AmountDisplay amount={1045} currency="mosaic" />,
+      data: <AmountDisplay amount={0} currency="mosaic" />,
     },
   ];
   return (
