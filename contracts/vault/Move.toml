@@ -1,9 +1,11 @@
 [package]
-name = "MOVEx"
+name = "vault"
 version = "1.0.0"
 authors = []
 
 [addresses]
+vault = "a6e77c0890e7301eb2a8c6a6e0b6fcc3d4bfa029193b1e0812ac05faaee3d683"
+std = "0x1"
 
 [dev-addresses]
 

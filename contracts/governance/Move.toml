@@ -1,0 +1,21 @@
+[package]
+name = "governance"
+version = "1.0.0"
+authors = []
+
+[addresses]
+governance = "c238c184928465db0a5e47ae6ec4b534e6bf6aaf6603b2cc73da4b646238ef9d"
+[dev-addresses]
+
+[dependencies.AptosFramework]
+git = "https://github.com/aptos-labs/aptos-core.git"
+rev = "mainnet"
+subdir = "aptos-move/framework/aptos-framework"
+
+[dependencies.AptosToken]
+git = "https://github.com/aptos-labs/aptos-core.git"
+rev = "mainnet"
+subdir = "aptos-move/framework/aptos-token"
+
+
+[dev-dependencies]
