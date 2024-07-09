@@ -2,16 +2,12 @@ import { Button } from "@/components/ui/button";
 import GetLoan from "./get-loan";
 import TypingAnimation from "@/components/ui/typing-animation";
 import { useUserStore, useWalletStore } from "@/hooks/useStore";
-import { ChainInfo } from "@/lib/chain";
 import { useToast } from "@/components/ui/use-toast";
-import { Window as KeplrWindow } from "@keplr-wallet/types";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { WalletSelector } from "@aptos-labs/wallet-adapter-ant-design";
 
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface Window extends KeplrWindow {}
-}
+import "@aptos-labs/wallet-adapter-ant-design/dist/index.css";
 
 export default function DashboardHeader() {
   const { user } = useUserStore();
@@ -20,17 +16,7 @@ export default function DashboardHeader() {
   const navigate = useNavigate();
 
   const connectWalletHandle = async () => {
-    const chainId = ChainInfo.chainId;
-    if (!window.keplr) {
-      toast({
-        description: "Please install Keplr wallet to proceed",
-      });
-    } else {
-      await window.keplr.enable(chainId);
-      const address = await window.keplr.getKey(chainId);
-      setWalletAddress(address.bech32Address);
-      localStorage.setItem("walletAddress", address.bech32Address);
-    }
+
   };
 
   useEffect(()=>{
@@ -41,7 +27,7 @@ export default function DashboardHeader() {
   return (
     <div className="flex flex-row justify-between">
       <h1 className="text-4xl inline-flex gap-2 text-foreground/80 font-mosaic">
-        Hi{" "}
+        Dashboard{" "}
         <TypingAnimation
           className="text-primary"
           text={walletAddress === null ? "" : `${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}`}
@@ -49,7 +35,7 @@ export default function DashboardHeader() {
         />
       </h1>
       <div className="flex gap-6">
-        <Button  onClick={connectWalletHandle}>{walletAddress === null ? "Connect Wallet" : walletAddress}</Button>
+        <WalletSelector /> 
         <Button onClick={()=>navigate("/governance")}>Go To Governance</Button>
         <GetLoan />
       </div>

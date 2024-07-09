@@ -4,20 +4,9 @@ import {
 } from "@/components/dashboard/commons/info-card";
 import { useState } from "react";
 import Heading from "@/components/dashboard/commons/heading";
-import { Window as KeplrWindow } from "@keplr-wallet/types";
-import { SigningArchwayClient, StdFee, Coin } from '@archwayhq/arch3.js';
 import { ChainInfo } from "@/lib/chain";
 import { useMUSDAmountStore, useRepayedStore, useSMUSDAmountStore, useWalletStore } from "@/hooks/useStore";
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface Window extends KeplrWindow { }
-}
 
-export interface ExecuteInstruction {
-  contractAddress: string;
-  msg: any;
-  funds?: readonly Coin[];
-}
 
 
 export default function OverviewCards() {
@@ -41,12 +30,6 @@ export default function OverviewCards() {
       type: "value",
       unit: "$",
       data: repayed.toString(),
-    },
-    {
-      title: "Credit Score",
-      type: "value",
-      unit: "pts",
-      data: creditScore,
     },
   ];
 

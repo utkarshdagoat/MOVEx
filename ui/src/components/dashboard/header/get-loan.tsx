@@ -10,32 +10,27 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { Aptos, AptosConfig, Network } from "@aptos-labs/ts-sdk";
+import { useWallet, InputTransactionData } from '@aptos-labs/wallet-adapter-react';
+import { VAULT_CONTRACT } from "@/lib/contracts";
+import { useToast } from "@/components/ui/use-toast";
 // import { useWalletStore } from "@/hooks/useStore";
 // import { Window as KeplrWindow } from "@keplr-wallet/types";
 // import { SigningArchwayClient, StdFee, Coin } from '@archwayhq/arch3.js';
 // import { ChainInfo } from "@/lib/chain";
-// const EXCHANGE_RATE_API = import.meta.env.VITE_EXCHANGE_RATE_API
-// const dataFetch = async () => {
-//   const res = await axios.get(EXCHANGE_RATE_API)
-//   const data = await res.data
-//   return data
-// }
+const EXCHANGE_RATE_API = import.meta.env.VITE_EXCHANGE_RATE_API
+const dataFetch = async () => {
+  const res = await axios.get(EXCHANGE_RATE_API)
+  const data = await res.data
+  return data
+}
 
-// declare global {
-//   // eslint-disable-next-line @typescript-eslint/no-empty-interface
-//   interface Window extends KeplrWindow { }
-// }
-
-// export interface ExecuteInstruction {
-//   contractAddress: string;
-//   msg: any;
-//   funds?: readonly Coin[];
-// }
-
+import { useSubmitTransaction } from "@thalalabs/surf/hooks";
+import { createSurfClient, createEntryPayload, EntryPayload } from "@thalalabs/surf";
+import { VAULT_ABI } from "@/abi/vault";
+import { useMUSDAmountStore } from "@/hooks/useStore";
 // export default function GetLoan() {
-//   const [USDAmount, setUSDAmount] = useState(0)
-//   const [ArchAmount, setArchAmount] = useState(0)
-//   const { walletAddress } = useWalletStore()
+
 
 //   const dynamic_collaterizatoin_value = async () => {
 //     if (window.keplr && walletAddress) {
@@ -89,58 +84,6 @@ import { useState, useEffect } from "react";
 
 //     }
 //   }
-
-//   useEffect(() => {
-//     const delayDebounceFn = setTimeout(async () => {
-//       const data = await dataFetch()
-//       const price = data.data.price;
-//       if (price) {
-//         setArchAmount(USDAmount / (price * 100))
-//       }
-//     }, 750)
-
-//     return () => clearTimeout(delayDebounceFn)
-//   }, [USDAmount])
-
-//   // const ChainInfo = { chainId: 'constantine-3', chainName: 'Constantine Testnet', rpc: 'https://rpc.constantine.archway.io', rest: 'https://api.constantine.archway.io', stakeCurrency: { coinDenom: 'CONST', coinMinimalDenom: 'aconst', coinDecimals: 18 }, bip44: { coinType: 118 }, bech32Config: { bech32PrefixAccAddr: 'archway', bech32PrefixAccPub: 'archwaypub', bech32PrefixValAddr: 'archwayvaloper', bech32PrefixValPub: 'archwayvaloperpub', bech32PrefixConsAddr: 'archwayvalcons', bech32PrefixConsPub: 'archwayvalconspub', }, currencies: [{ coinDenom: 'CONST', coinMinimalDenom: 'aconst', coinDecimals: 18 }], feeCurrencies: [{ coinDenom: 'CONST', coinMinimalDenom: 'aconst', coinDecimals: 18 }], coinType: 118, gasPriceStep: { low: 0, average: 0.1, high: 0.2 }, features: ['cosmwasm'], };
-//   // async function connectKeplrWallet(chainName, chainRpcUrl, chainId) {
-//   //   if (typeof window.keplr === 'undefined') {
-//   //     console.warn('Keplr wallet not found. Please install Keplr first.');
-//   //     return;
-//   //   }
-
-//   //   if (typeof window.keplr.experimentalSuggestChain === 'function') {
-//   //     try {
-//   //       await window.keplr.experimentalSuggestChain({
-//   //         chainId: chainId,
-//   //         chainName: chainName,
-//   //         rpcUrl: chainRpcUrl,
-//   //       });
-//   //     } catch (error) {
-//   //       console.warn('Error suggesting chain:', error);
-//   //     }
-//   //   }
-
-//   //   // Enable Keplr for the chain
-//   //   try {
-//   //     await window.keplr.enable(chainId);
-//   //     console.log(`Keplr enabled for chain: ${chainName}`);
-//   //   } catch (error) {
-//   //     console.error('Error enabling Keplr:', error);
-//   //     return;
-//   //   }
-//   //   let offlineSigner;
-//   //   try {
-//   //     offlineSigner = await window.getOfflineSignerAuto(chainId);
-//   //   } catch (error) {
-//   //     console.error('Error getting Keplr signer:', error)
-//   //     return;
-//   //   }
-//   //   const CosmWasmClient = await SigningArchwayClient.connectWithSigner(ChainInfo.rpc, offlineSigner);
-//   //   const accounts = await offlineSigner.getAccounts();
-//   //   const queryHandler = CosmWasmClient.queryContractSmart;
-//   //   console.log('Wallet connected', { offlineSigner: offlineSigner, CosmWasmClient: CosmWasmClient, accounts: accounts, chain: ChainInfo, queryHandler: queryHandler, });
-//   // }
 
 
 //   const callContract = async () => {
@@ -267,43 +210,153 @@ import { useState, useEffect } from "react";
 //     </>
 //   );
 // }
-
-
+const aptosConfig = new AptosConfig({
+  fullnode: 'https://aptos.devnet.m1.movementlabs.xyz',
+});
+const aptos = new Aptos(aptosConfig);
+const client = createSurfClient(new Aptos(new AptosConfig({ fullnode: "https://aptos.devnet.m1.movementlabs.xyz" })));
 export default function GetLoan() {
-  return (
-    <>
-      <Dialog>
-        <DialogTrigger>
-          <Button>Get Loan</Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Get a Loan</DialogTitle>
-          </DialogHeader>
-          <Label className="text-muted-foreground" htmlFor="amount" />
-          <Input
-            id="amount"
-            name="amount"
-            placeholder="Enter Loan Amount (USDC)"
-          />
-          <Input
-            id="time"
-            placeholder="Enter time period for the loan (say 5 months)"
-          />
-          <p className="text-xs mt-2 text-muted-foreground">Select the loan type</p>
-          <div className="flex flex-row gap-2">
-            <Button variant="secondary" className="flex-1">Fixed</Button>
-            <Button variant="secondary" className="flex-1">Dynamic</Button>
-          </div>
+  const [USDAmount, setUSDAmount] = useState(0)
+  const [MOVEAmount, setMoveAmount] = useState(0)
+  const { signAndSubmitTransaction, account } = useWallet();
+  const { toast } = useToast()
+  const { setMUSDAmount } = useMUSDAmountStore()
+  const {
+    isIdle,
+    reset,
+    isLoading: submitIsLoading,
+    error: submitError,
+    submitTransaction,
+    data: submitResult,
+  } = useSubmitTransaction();
 
-          <div className="flex flex-row gap-2">
-            <Input className="flex-1" placeholder="Your wallet Address"></Input>
-            {/* <Button variant={'ghost'} size={'icon'}><img src={leapLogo} /></Button> */}
-          </div>
 
-          <Button>Apply</Button>
-        </DialogContent>
-      </Dialog>
-    </>
-  );
-}
+
+  const dynamic_collaterizatoin_value = async () => {
+    if (account?.address) {
+      console.log(account.address, USDAmount * 10 ** 6)
+      const [tx] = await aptos.view({
+        payload: {
+          function: `${VAULT_CONTRACT}::Vault::get_dynamic_interest_rate`,
+          functionArguments: [account.address, Math.floor(USDAmount * 10 ** 6)],
+          typeArguments: []
+        }
+      })
+      console.log(tx)
+      if (Number(tx) == 0) {
+        setMoveAmount(USDAmount * 1.5)
+      }
+
+      else {
+        let k = (Math.E) ** ((USDAmount) * Number(tx) / 1000)
+        setUSDAmount(k * 1.5 * USDAmount)
+
+      }
+    }
+  }
+
+  async function getMUSDBalance() {
+    if (!account) setMUSDAmount(0)
+      console.log("here")
+    if (account?.address) {
+      const resource = await aptos.getAccountResource({
+        accountAddress: account?.address,
+        resourceType: `0x1::coin::CoinStore<${VAULT_CONTRACT}::Vault::MUSDC>`,
+      });
+      console.log(resource)
+    }
+  }
+  useEffect(()=>{
+    getMUSDBalance()
+  },[])
+    async function deposit() {
+      // const transaction: InputTransactionData = {
+      //   data: {
+      //     function: `${VAULT_CONTRACT}::vault::deposit`,
+      //     functionArguments: [MOVEAmount,USDAmount ]
+      //   }
+      // }
+      // try {
+      //   // sign and submit transaction to chain
+      //   const response = await signAndSubmitTransaction(transaction);
+      //   // wait for transaction
+      //   toast({
+      //     description:`Success!  ${response.hash}`
+      //   })
+      //   await aptos.waitForTransaction({ transactionHash: response.hash });
+      // } catch (error: any) {
+      //   console.error(error)
+      //   toast({
+      //     description: "Failed to Deposit",
+      //     variant: "destructive"
+      //   })
+      // }
+
+
+      const payload = createEntryPayload(VAULT_ABI, {
+        /// @ts-ignore
+        function: "deposit",
+        /// @ts-ignore
+        typeArguments: [],
+        /// @ts-ignore
+        functionArguments: [Math.floor(MOVEAmount * 10 ** 8), Math.floor(USDAmount * 10 ** 6)]
+      });
+      const tx = await submitTransaction(payload);
+      console.log(tx)
+    }
+
+    useEffect(() => {
+      const delayDebounceFn = setTimeout(async () => {
+        const data = await dataFetch()
+        const price = data.data.price;
+        if (price) {
+          setMoveAmount(USDAmount / (price))
+        }
+      }, 750)
+
+      return () => clearTimeout(delayDebounceFn)
+    }, [USDAmount])
+
+
+    return (
+      <>
+        <Dialog>
+          <DialogTrigger>
+            <Button>Get Loan</Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Get a Loan</DialogTitle>
+            </DialogHeader>
+            <Label className="text-muted-foreground" htmlFor="amount" />
+            <Input
+              id="amount"
+              name="amount"
+              placeholder="Enter Loan Amount USD"
+              value={USDAmount}
+              onChange={(e) => setUSDAmount(Number(e.target.value))}
+              type="number"
+            />
+            <Input
+              id="amount"
+              name="amount"
+              placeholder="Your Arch Amount"
+              value={MOVEAmount}
+              disabled
+            />
+            <p className="text-xs mt-2 text-muted-foreground">Select the loan type</p>
+            <div className="flex flex-row gap-2">
+              <Button variant="secondary" className="flex-1">Fixed</Button>
+              <Button variant="secondary" className="flex-1" onClick={dynamic_collaterizatoin_value}>Dynamic</Button>
+            </div>
+
+            <div className="flex flex-row gap-2">
+              <Input className="flex-1" placeholder="Your wallet Address"></Input>
+            </div>
+
+            <Button onClick={deposit}>Apply</Button>
+          </DialogContent>
+        </Dialog>
+      </>
+    );
+  }

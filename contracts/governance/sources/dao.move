@@ -35,9 +35,6 @@ module governance::dao {
     use aptos_token::property_map::PropertyMap;
     use aptos_token::property_map;
     use aptos_token::token::{Self, TokenId, create_token_id_raw};
-    use governance::bucket_table::BucketTable;
-    use governance::bucket_table;
-    use governance::dao_events::{Self, emit_create_dao_event};
     use std::bcs;
     use std::error;
     use std::option::{Self, Option};
@@ -187,7 +184,7 @@ module governance::dao {
 
     #[view]
     /// Unpack the DAO fields
-    public fun unpack_dao(): ( u64, u64, address,vector<address>,vector<address>) acquires DAO {
+    public entry fun unpack_dao(): ( u64, u64, address,vector<address>,vector<address>) acquires DAO {
         let dao = borrow_global<DAO>(@governance);
         (
             dao.voting_duration,
@@ -215,13 +212,13 @@ module governance::dao {
     ): address {
         
         assert!(signer::address_of(creator) == @governance, ENOT_DEPLOYER_ADDRESS);
-        let (res_signer, res_cap) = account::create_resource_account(creator, x"01");
+        let (res_signer, res_cap) = account::create_resource_account(creator, x"ff");
         let src_addr = signer::address_of(creator);
 
              // Only owner can create admin.
 
         // Create a resource account to hold the funds.
-        let (resource, resource_cap) = account::create_resource_account(creator, x"01");
+        let (resource, resource_cap) = account::create_resource_account(creator, x"aa");
         let (burn_cap, freeze_cap, mint_cap) = coin::initialize<MOVEX>(
             creator,
             string::utf8(b"MOVEX governance"),
@@ -267,11 +264,6 @@ module governance::dao {
         );
 
         let dao_addr = signer::address_of(&res_signer);
-
-        emit_create_dao_event(
-            &res_signer,
-            src_addr,
-        );
         dao_addr
     }
 
@@ -400,7 +392,7 @@ module governance::dao {
 
 
     /// DAO admin can directly resolve a proposal
-    public entry fun admin_resolve(admin: &signer, proposal_id: u64, nft_dao: address, reason: String) acquires DAO, Proposals, ProposalVotingStatistics {
+    public entry fun admin_resolve(admin: &signer, proposal_id: u64, nft_dao: address, reason: String) acquires  Proposals, ProposalVotingStatistics {
         let resolver = signer::address_of(admin);
         // assert the proposal voting ended
         let proposals = borrow_global<Proposals>(nft_dao);
@@ -466,7 +458,7 @@ module governance::dao {
 
 
     /// Resolve an proposal
-    fun resolve_internal(proposal_id: u64) acquires DAO, Proposals, ProposalVotingStatistics {
+    fun resolve_internal(proposal_id: u64) acquires Proposals, ProposalVotingStatistics {
         // validate if proposal is ready to resolve
         // assert the proposal voting ended
         let proposals = borrow_global_mut<Proposals>(@governance);

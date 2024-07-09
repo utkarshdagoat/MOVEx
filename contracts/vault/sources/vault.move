@@ -74,7 +74,9 @@ module vault::Vault {
         
    
         vault_info.total_staked = vault_info.total_staked + amountOutUSD;
-        simple_map::add(&mut vault_info.repayed, sender_addr, 0);
+        if(!simple_map::contains_key(&vault_info.repayed, &sender_addr)){
+            simple_map::add(&mut vault_info.repayed, sender_addr, 0);
+        };
         // Mint shares
 
         if(!coin::is_account_registered<MUSD>(sender_addr)){
@@ -153,7 +155,6 @@ module vault::Vault {
         let dynamic_interest = 1 + contrib_inv + contrib_inv * contrib_inv;
         return dynamic_interest
     }
-
     #[view]
     public fun get_repayed(account: address): u64 acquires VaultInfo {
         assert!(exists<VaultInfo>(@vault), ENOT_INIT);

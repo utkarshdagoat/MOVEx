@@ -40,9 +40,9 @@ export function LoansChart() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Area Chart - Stacked</CardTitle>
+        <CardTitle>Statistics</CardTitle>
         <CardDescription>
-          Showing total visitors for the last 6 months
+          Showing total value locked forMove and mUSD Minted
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -93,7 +93,7 @@ export function LoansChart() {
               Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
             </div>
             <div className="flex items-center gap-2 leading-none text-muted-foreground">
-              January - June 2024
+              January - July 2024
             </div>
           </div>
         </div>

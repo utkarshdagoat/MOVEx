@@ -4,7 +4,8 @@ version = "1.0.0"
 authors = []
 
 [addresses]
-governance = "c238c184928465db0a5e47ae6ec4b534e6bf6aaf6603b2cc73da4b646238ef9d"
+governance = "0xc238c184928465db0a5e47ae6ec4b534e6bf6aaf6603b2cc73da4b646238ef9d"
+std="0x1"
 [dev-addresses]
 
 [dependencies.AptosFramework]
