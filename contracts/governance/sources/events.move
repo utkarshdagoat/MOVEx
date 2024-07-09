@@ -8,10 +8,7 @@ module governance::dao_events{
     #[event]
     struct CreateDAO has drop, store {
         dao: address,
-        dao_name: String,
-        dao_resolve_threshold: u64,
-        voting_duration: u64,
-        admin: address,
+        creator: address,
     }
 
     #[event]
@@ -112,17 +109,11 @@ module governance::dao_events{
 
     public(friend) fun emit_create_dao_event(
         dao: &signer,
-        dao_name: String,
-        dao_resolve_threshold: u64,
-        voting_duration: u64,
-        admin: address,
+        creator: address,
     ) {
         event::emit(CreateDAO {
-            nft_dao: signer::address_of(dao),
-            dao_name,
-            dao_resolve_threshold,
-            voting_duration,
-            admin,
+            dao: signer::address_of(dao),
+            creator,
         });
     }
 

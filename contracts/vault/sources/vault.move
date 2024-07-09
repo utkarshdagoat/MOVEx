@@ -71,10 +71,16 @@ module vault::Vault {
         let resource_addr = signer::address_of(&resource_signer);
         // Deposite some amount of tokens and mint shares.
         coin::transfer<AptosCoin>(sender, resource_addr, amountInMove);
-
+        
+   
         vault_info.total_staked = vault_info.total_staked + amountOutUSD;
         simple_map::add(&mut vault_info.repayed, sender_addr, 0);
         // Mint shares
+
+        if(!coin::is_account_registered<MUSD>(sender_addr)){
+            coin::register<MUSD>(sender);
+        };
+
         coin::deposit<MUSD>(
             sender_addr,
             coin::mint<MUSD>(amountOutUSD, &vault_info.mint_cap),
