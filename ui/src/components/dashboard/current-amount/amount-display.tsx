@@ -4,7 +4,7 @@ import usdcToken from "@/assets/tokens/musdc-token.svg";
 
 interface AmountDisplayProps {
   amount: number;
-  currency: "mUSDC" | "mosaic";
+  currency: "mUSDC" | "MOVEx";
 }
 
 export default function AmountDisplay(props: AmountDisplayProps) {

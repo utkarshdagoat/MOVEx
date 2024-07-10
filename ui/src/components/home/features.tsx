@@ -24,21 +24,21 @@ export default function Features() {
     {
       title: "Algorithmic Stablecoin",
       description:
-        "Mosaic is an algorithmic stablecoin protocol that aims to provide a decentralized, scalable, and secure stablecoin.",
+        "MOVEx is an algorithmic stablecoin protocol that aims to provide a decentralized, scalable, and secure stablecoin.",
       image: mosaicToken,
       alt: "Algorithmic Stablecoin",
     },
     {
       title: "Collaterized Debt Positions",
       description:
-        "Users can mint Mosaic's stablecoin, Mosaic USD (mUSD), by depositing collateral in the form of various crypto assets.",
+        "Users can mint MOVEx's stablecoin, MOVEx USD (mUSD), by depositing collateral in the form of various crypto assets.",
       image: mUSDC,
       alt: "collaterized debt",
     },
     {
       title: "Truly decentralized via DAO",
       description:
-        "Mosaic is governed by a DAO, which allows token holders to vote on proposals and changes to the protocol.",
+        "MOVEx is governed by a DAO, which allows token holders to vote on proposals and changes to the protocol.",
       image: dao,
       alt: "DAO",
     },

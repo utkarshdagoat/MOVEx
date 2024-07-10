@@ -34,8 +34,8 @@ export default function Hero() {
                   />
                 </h1>
                 <p className="w-[48ch] text-lg mx-auto text-muted-foreground">
-                  Unleash the full potential of ARCH with{" "}
-                  <span className="font-mosaic font-bold text-primary">
+                  Unleash the full potential of Move with{" "}
+                  <span className="font-MOVEx font-bold text-primary">
                     MOVEx
                   </span>
                   's leverage. Multiply your returns without tying up more

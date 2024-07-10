@@ -18,7 +18,7 @@ export default function DashboardHeader() {
 
   return (
     <div className="flex flex-row justify-between">
-      <h1 className="text-4xl inline-flex gap-2 text-foreground/80 font-mosaic">
+      <h1 className="text-4xl inline-flex gap-2 text-foreground/80 font-MOVEx">
         Dashboard{" "}
         <TypingAnimation
           className="text-primary"

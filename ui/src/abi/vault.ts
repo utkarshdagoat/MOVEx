@@ -1,7 +1,7 @@
 import { ABIRoot } from "node_modules/@thalalabs/surf/build/types/types";
 
 export const VAULT_ABI  = {
-    "address": "0xa6e77c0890e7301eb2a8c6a6e0b6fcc3d4bfa029193b1e0812ac05faaee3d683",
+    "address": "27fc7d36a8946e85be9003fac9dbcb02e96e104d4d31c7e1c3f2c585d9fa7fef",
     "name": "Vault",
     "friends": [],
     "exposed_functions": [
