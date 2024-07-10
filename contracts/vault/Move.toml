@@ -4,7 +4,7 @@ version = "1.0.0"
 authors = []
 
 [addresses]
-vault = "d2118781044cce8749b26cf366016f01eb0fdc7baa0e3a2b825e33b5fe8b2b46"
+vault = "0x27fc7d36a8946e85be9003fac9dbcb02e96e104d4d31c7e1c3f2c585d9fa7fef"
 std = "0x1"
 
 [dev-addresses]
