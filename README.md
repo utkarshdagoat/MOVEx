@@ -1,6 +1,7 @@
 ## MOVEx: Leverage Your MOVE Tokens
 
 **MOVEx** empowers users to leverage their MOVE tokens and unlock the potential of mUSD, a dollar-pegged stablecoin. 
+
 **For a deep dive into the technical architecture, economic model, and platform risks, please refer to the MOVEx whitepaper.**
 
 **Get Started:**
