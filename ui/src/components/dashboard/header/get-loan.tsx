@@ -211,10 +211,10 @@ import { useMUSDAmountStore } from "@/hooks/useStore";
 //   );
 // }
 const aptosConfig = new AptosConfig({
-  fullnode: 'https://aptos.devnet.m1.movementlabs.xyz',
+  network: Network.TESTNET,
 });
 const aptos = new Aptos(aptosConfig);
-const client = createSurfClient(new Aptos(new AptosConfig({ fullnode: "https://aptos.devnet.m1.movementlabs.xyz" })));
+const client = createSurfClient(aptos);
 export default function GetLoan() {
   const [USDAmount, setUSDAmount] = useState(0)
   const [MOVEAmount, setMoveAmount] = useState(0)
@@ -238,7 +238,7 @@ export default function GetLoan() {
       const [tx] = await aptos.view({
         payload: {
           function: `${VAULT_CONTRACT}::Vault::get_dynamic_interest_rate`,
-          functionArguments: [account.address, Math.floor(USDAmount * 10 ** 6)],
+          functionArguments: [account.address, Math.floor(USDAmount * 10 ** 18)],
           typeArguments: []
         }
       })
@@ -259,16 +259,18 @@ export default function GetLoan() {
     if (!account) setMUSDAmount(0)
       console.log("here")
     if (account?.address) {
+      console.log("here")
       const resource = await aptos.getAccountResource({
         accountAddress: account?.address,
-        resourceType: `0x1::coin::CoinStore<${VAULT_CONTRACT}::Vault::MUSDC>`,
+        resourceType: `0x1::coin::CoinStore<${VAULT_CONTRACT}::Vault::MUSD>`,
       });
       console.log(resource)
+      setMUSDAmount(resource.coin.value/10**18)
     }
   }
   useEffect(()=>{
     getMUSDBalance()
-  },[])
+  },[account?.address])
     async function deposit() {
       // const transaction: InputTransactionData = {
       //   data: {
@@ -299,7 +301,7 @@ export default function GetLoan() {
         /// @ts-ignore
         typeArguments: [],
         /// @ts-ignore
-        functionArguments: [Math.floor(MOVEAmount * 10 ** 8), Math.floor(USDAmount * 10 ** 6)]
+        functionArguments: [Math.floor(MOVEAmount * 10 ** 8), Math.floor(USDAmount * 10 ** 18)]
       });
       const tx = await submitTransaction(payload);
       console.log(tx)

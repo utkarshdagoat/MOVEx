@@ -148,13 +148,13 @@ module vault::Vault {
         return 150
     }
 
-    public entry fun get_dynamic_interest_rate(account: address, amount: u64): u64 acquires VaultInfo{
+    #[view]
+    public fun get_dynamic_interest_rate(account: address, amount: u64): u64 acquires VaultInfo{
         let vault_info = borrow_global<VaultInfo>(@vault);
         let contrib_inv = vault_info.total_staked / amount;
         let dynamic_interest = 1 + contrib_inv + contrib_inv * contrib_inv;
         return dynamic_interest
     }
-
     #[view]
     public fun get_repayed(account: address): u64 acquires VaultInfo {
         assert!(exists<VaultInfo>(@vault), ENOT_INIT);

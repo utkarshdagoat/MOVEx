@@ -4,6 +4,7 @@ import {
 } from "@/components/dashboard/commons/info-card";
 import AmountDisplay from "./amount-display";
 import Heading from "@/components/dashboard/commons/heading";
+import { useMUSDAmountStore } from "@/hooks/useStore";
 // import { Window as KeplrWindow } from "@keplr-wallet/types";
 // import { SigningArchwayClient, StdFee, Coin } from '@archwayhq/arch3.js';
 // import { ChainInfo } from "@/lib/chain";
@@ -126,11 +127,12 @@ import Heading from "@/components/dashboard/commons/heading";
 
 
 export default function AmountInfo() {
+  const {mUSDAmount}= useMUSDAmountStore()
   const data: InfoCardProps[] = [
     {
       title: "mUSDC Balance",
       type: "component",
-      data: <AmountDisplay amount={0} currency="mUSDC" />,
+      data: <AmountDisplay amount={mUSDAmount} currency="mUSDC" />,
     },
     {
       title: "Rewards",

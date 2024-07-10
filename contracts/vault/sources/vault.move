@@ -149,7 +149,7 @@ module vault::Vault {
     }
 
     #[view]
-    public fun get_dynamic_interest_rate(account: address, amount: u64): u64 acquires VaultInfo{
+    public fun get_dynamic_interest_rate(amount: u64): u64 acquires VaultInfo{
         let vault_info = borrow_global<VaultInfo>(@vault);
         let contrib_inv = vault_info.total_staked / amount;
         let dynamic_interest = 1 + contrib_inv + contrib_inv * contrib_inv;

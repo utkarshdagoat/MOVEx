@@ -4,7 +4,7 @@ version = "1.0.0"
 authors = []
 
 [addresses]
-governance = "0xc238c184928465db0a5e47ae6ec4b534e6bf6aaf6603b2cc73da4b646238ef9d"
+governance = "0x52969b2815d0b487a1ec923c01fa7faa203d6b790f0a6a83d5c39a66d63612d7"
 std="0x1"
 [dev-addresses]
 

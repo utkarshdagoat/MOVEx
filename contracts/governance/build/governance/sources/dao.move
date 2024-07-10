@@ -173,9 +173,64 @@ module governance::dao {
     /////////////////////////// DAO flow //////////////////////////////////
     /// Creator creates a DAO on the platform
    fun init_module(
-        admin: &signer,
+        creator: &signer,
     ) {
-        create_dao_and_get_dao_address(admin);
+
+
+        assert!(signer::address_of(creator) == @governance, ENOT_DEPLOYER_ADDRESS);
+        let (res_signer, res_cap) = account::create_resource_account(creator, x"ff");
+        let src_addr = signer::address_of(creator);
+
+             // Only owner can create admin.
+
+        // Create a resource account to hold the funds.
+        let (resource, resource_cap) = account::create_resource_account(creator, x"aa");
+        let (burn_cap, freeze_cap, mint_cap) = coin::initialize<MOVEX>(
+            creator,
+            string::utf8(b"MOVEX governance"),
+            string::utf8(b"MOVEX"),
+            18,
+            false,
+        );
+
+        // We don't need to freeze the tokens.
+        coin::destroy_freeze_cap(freeze_cap);
+
+        // Register the resource account.
+        coin::register<MOVEX>(creator);
+        coin::register<AptosCoin>(&resource);
+        // coin::register<MUSD>(&resource);
+
+
+        move_to(
+            creator,
+            DAO {
+                voting_duration:604800,
+                next_proposal_id: 0,
+                dao_signer_capability: res_cap,
+                creator: src_addr,
+                dev: vector::empty(),
+                members: vector::empty(),
+                mint_cap: mint_cap,
+                burn_cap: burn_cap,
+            },
+        );
+        move_to(
+           creator,
+            Proposals {
+                proposals: table::new()
+            }
+        );
+
+        move_to(
+          creator,
+            ProposalVotingStatistics {
+                proposals: table::new()
+            }
+        );
+
+        let dao_addr = signer::address_of(&res_signer);
+        // create_dao_and_get_dao_address(admin);
     }
 
 
@@ -423,13 +478,6 @@ module governance::dao {
             proposal.resolution,
         )
     }
-
-    /////////////////////////// Private functions //////////////////////////////////
-    /// Transfer coin from the DAO account to the destination account
-    fun transfer_fund(res_acct: &signer, dst: address, amount: u64) {
-        coin::transfer<AptosCoin>(res_acct, dst, amount);
-    }
-
 
 
     /// Resolve an proposal
