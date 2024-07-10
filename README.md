@@ -12,7 +12,7 @@
 
 **Get Started:**
 
-* Read the Whitepaper: [Link to Whitepaper](replace with actual link)
+* [Read the Whitepaper:](https://movex-1.gitbook.io/movex/)
 * Stay tuned for upcoming announcements!
 
 **MOVEx: Leverage the Power of MOVE.**
