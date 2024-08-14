@@ -1,4 +1,6 @@
 ## MOVEx: Leverage Your MOVE Tokens
+#### Winner of the movement labs DEFI Track. 🚀🚀
+
 
 **MOVEx** empowers users to leverage their MOVE tokens and unlock the potential of mUSD, a dollar-pegged stablecoin. 
 
